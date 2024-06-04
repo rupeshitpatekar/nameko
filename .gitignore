@@ -1,0 +1,39 @@
+# IntelliJ project files
+*.iml
+*.ipr
+*.iws
+*.idea
+
+# Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Build and deployment files
+build/
+dist/
+*.egg-info
+*.egg
+
+# IDE temporary files
+*.swp
+*.swo
+
+# Other files
+*.log
+*.tmp
+*.bak
+*.rej
+*.orig
+*.rej
+*.tmp
+*.bak
+*.swo
+*.swp
+*.pyc
+*.pyo
+*.pyd
+*.egg
