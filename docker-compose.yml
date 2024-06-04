@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+    depends_on:
+      - rabbitmq
+      - redis
+
+  airports_service:
+    build:
+      context: ./airports_service
+      dockerfile: Dockerfile
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+      - REDIS_URI=redis://redis:6379/0
+    depends_on:
+      - rabbitmq
+      - redis
+      - gateway
+
+  trips_service:
+    build:
+      context: ./trips_service
+      dockerfile: Dockerfile
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+      - REDIS_URI=redis://redis:6379/0
+    depends_on:
+      - rabbitmq
+      - redis
+      - gateway
+
+  user_service:
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+    depends_on:
+      - rabbitmq
+      - redis
+      - gateway
+
+  redis:
+    image: redis:5.0
+    ports:
+      - "6379:6379"
+
+  sender_service:
+    build:
+      context: ./sender_service
+      dockerfile: Dockerfile
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+    depends_on:
+      - rabbitmq
+
+  receiver_service:
+    build:
+      context: ./receiver_service
+      dockerfile: Dockerfile
+    environment:
+      - NAMEKO_AMQP_URI=pyamqp://guest:guest@rabbitmq
+    depends_on:
+      - rabbitmq

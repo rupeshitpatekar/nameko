@@ -1,0 +1,3 @@
+AMQP_URI: 'pyamqp://guest:guest@rabbitmq'
+REDIS_URIS:
+  development: 'redis://redis:6379/0'
